@@ -9,7 +9,7 @@ class FileCache {
 
     function __construct(String $filename, Array $options=[]) {
         if(!file_exists($filename)) {
-            throw new Exception("File '{$filename}' not found");
+            throw new \Exception("File '{$filename}' not found");
         }
         $this->filename = $filename;
         $this->setOptionsInit($options);
@@ -105,7 +105,7 @@ class FileCache {
         foreach($options_available as $name=>$option) {
             if(!empty($options[$name])) {
                 if(!$this->checkType($option['type'], $options[$name])) {
-                    throw new Exception("Illegal value for option '{$name}'");
+                    throw new \Exception("Illegal value for option '{$name}'");
                 }
                 $this->options[$name] = $options[$name];
             } else {
