@@ -120,7 +120,7 @@ class FileCache {
             case 'int':
                 return is_int($value);
             case 'hash_algo':
-                return in_array($value, hash_algos);
+                return in_array($value, hash_algos());
         }
     }
 }
