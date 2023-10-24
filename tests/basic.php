@@ -2,7 +2,7 @@
 
 use volkerschulz\FileCache;
 
-require('../vendor/autoload.php');
+require('../src/FileCache/FileCache.php');
 
 $filecache = new FileCache('testfiles/utf.json');
 header('Content-Type: application/json; charset=UTF8');

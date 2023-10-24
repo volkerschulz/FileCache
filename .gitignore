@@ -1,2 +1,4 @@
 .DS_Store
 /vendor/
+/tests/testfiles/generated/*
+!/tests/testfiles/generated/.gitkeep
