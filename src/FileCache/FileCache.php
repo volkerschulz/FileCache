@@ -42,14 +42,13 @@ class FileCache {
     }
 
     private function isModified() : Bool {
-        $request_headers = getallheaders();
-        if($this->options['use_etag'] && !empty($request_headers['If-None-Match'])) {
-            if(trim($request_headers['If-None-Match'], '"') === $this->getEtag()) {
+        if($this->options['use_etag'] && !empty($_SERVER['HTTP_IF_NONE_MATCH'])) {
+            if(trim($_SERVER['HTTP_IF_NONE_MATCH'], '"') === $this->getEtag()) {
                 return false;
             }
         }
-        if(!empty($request_headers['If-Modified-Since'])) {
-            if(trim($request_headers['If-Modified-Since'], '"') === $this->getModificationTimeFormatted()) {
+        if(!empty($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
+            if(trim($_SERVER['HTTP_IF_MODIFIED_SINCE'], '"') === $this->getModificationTimeFormatted()) {
                 return false;
             }
         }
