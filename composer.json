@@ -1,0 +1,24 @@
+{
+    "name": "volkerschulz/file-cache",
+    "description": "PHP file cache handler",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "volkerschulz\\FileCache\\": "src/FileCache/"
+        },
+        "files": [
+            "src/FileCache/FileCache.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "volkerschulz",
+            "email": "github@volkerschulz.de"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=8.0.0"
+    }
+}
