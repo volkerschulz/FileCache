@@ -58,14 +58,21 @@ class FileCache {
     private function getEtag() : String {
         if(empty($this->attributes['etag'])) {
             $this->attributes['etag'] = '';
+            $hash_blocks = [];
+
             if($this->options['use_checksum']) {
-                $this->attributes['etag'] = hash_file($this->options['hash_algo'], $this->filename);
-            } else {
-                $this->attributes['etag'] = dechex(filemtime($this->filename));
-                if($this->options['use_filesize']) {
-                    $this->attributes['etag'] .= '-' . dechex(filesize($this->filename));
-                }
+                $hash_blocks[] = hash_file($this->options['hash_algo'], $this->filename);
+            } 
+
+            if($this->options['use_filetime']) {
+                $hash_blocks[] = dechex(filemtime($this->filename));
             }
+
+            if($this->options['use_filesize']) {
+                $hash_blocks[] = dechex(filesize($this->filename));
+            }
+
+            $this->attributes['etag'] = implode('-', $hash_blocks);
         }
         return $this->attributes['etag'];
     }
@@ -87,6 +94,10 @@ class FileCache {
                 'type' => 'hash_algo',
                 'default' => 'crc32',
             ],
+            'use_filetime' => [
+                'type' => 'bool',
+                'default' => true,
+            ],
             'use_filesize' => [
                 'type' => 'bool',
                 'default' => true,
@@ -102,7 +113,7 @@ class FileCache {
         ];
 
         foreach($options_available as $name=>$option) {
-            if(!empty($options[$name])) {
+            if(isset($options[$name])) {
                 if(!$this->checkType($option['type'], $options[$name])) {
                     throw new \Exception("Illegal value for option '{$name}'");
                 }
@@ -110,6 +121,11 @@ class FileCache {
             } else {
                 $this->options[$name] = $option['default'];
             }
+        }
+
+        // Sanity checks
+        if(false === ($this->options['use_filetime'] || $this->options['use_filesize'] || $this->options['use_checksum'])) {
+            throw new \Exception("Configuration error: At least one of 'use_filetime' || 'use_filesize' || 'use_checksum' needs to be true");
         }
     }
 
