@@ -12,5 +12,5 @@ $options = [
 ];
 
 $filecache = new FileCache('testfiles/utf.json', $options);
-header('Content-Type: application/json; charset=UTF8');
+$filecache->addHeader('Content-Type', 'application/json; charset=UTF8');
 $filecache->respond();
