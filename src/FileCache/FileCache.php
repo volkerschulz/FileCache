@@ -6,6 +6,7 @@ class FileCache {
     protected Array $options;
     protected String $filename;
     protected Array $attributes;
+    protected Array $additional_headers;
 
     function __construct(String $filename, Array $options=[]) {
         if(!file_exists($filename)) {
@@ -19,12 +20,31 @@ class FileCache {
         return $this->options;
     }
 
+    public function addHeader(String $key, String $value) : Bool {
+        $key = trim($key);
+        $value = trim($value);
+        if($key==='' || $value==='') {
+            return false;
+        }
+        $forbidden = [
+            'cache-control',
+            'last-modified',
+            'etag'
+        ];
+        if(in_array(strtolower($key), $forbidden)) {
+            return false;
+        }
+        $this->additional_headers[] = ['key'=>$key, 'value'=>$value];
+        return true;
+    }
+
     public function respond() : Void {
         if(!$this->isModified()) {
             header('HTTP/1.1 304 Not Modified');
             exit;
         }
         $this->setHeaders();
+        $this->setAdditionalHeaders();
         readfile($this->filename);
         exit;
     }
@@ -39,6 +59,12 @@ class FileCache {
         if($this->options['use_etag']) 
             header('ETag: "' . $this->getEtag() . '"');
         header('Last-Modified: ' . $this->getModificationTimeFormatted());
+    }
+
+    private function setAdditionalHeaders() : Void {
+        foreach($this->additional_headers as $header) {
+            header($header['key'] . ': ' . $header['value'], false);
+        }
     }
 
     private function isModified() : Bool {

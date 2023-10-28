@@ -16,8 +16,10 @@ use volkerschulz\FileCache;
 // Create instance for file 'testfiles/utf.json' 
 // with default options
 $filecache = new FileCache('testfiles/utf.json');
+
 // Set additional custom headers (optional)
-header('Content-Type: application/json; charset=UTF8');
+$filecache->addHeader('Content-Type', 'application/json; charset=UTF8');
+
 // Respond to request
 $filecache->respond();
 ```
@@ -35,12 +37,35 @@ $options = [
 // Create instance for file 'testfiles/utf.json' 
 // with custom options
 $filecache = new FileCache('testfiles/utf.json', $options);
+
 // Set additional custom headers (optional)
-header('Content-Type: application/json; charset=UTF8');
+$filecache->addHeader('Content-Type', 'application/json; charset=UTF8');
+
 // Respond to request
 $filecache->respond();
 ```
 
+## Options
+
+**use_filetime** *bool* \
+*Default: true* - Whether to use the file's last modification time when creating the ETag.\
+\
+**use_filesize** *bool* \
+*Default: true* - Whether to use the file's size when creating the ETag.\
+\
+**use_checksum** *bool* \
+*Default: false* - Whether to use the file's hash when creating the ETag. Depending on the filesize this might consume a lot of CPU and I/O time.
+
+> At least one of **use_filetime**, **use_filesize**, **use_checksum** needs to be *true* to create or compare an ETag.
+
+**hash_algo** *String* \
+*Default: 'crc32'* - Which hash algorithm to use when **use_checksum** is *true*. Must be supported by the current PHP version.\
+\
+**use_etag** *bool* \
+*Default: true* - Whether to use an ETag at all. It is strongly recommended to leave that option set to *true*.\
+\
+**fresh_for** *int* \
+*Default: 0* - Number of seconds (from now) the resource is guaranteed not to be stale and should not be revalidated.
 
 ## Security
 

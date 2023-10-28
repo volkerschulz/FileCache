@@ -5,9 +5,10 @@ use volkerschulz\FileCache;
 require('../src/FileCache/FileCache.php');
 
 $options = [
+    'use_filetime'  => false,
+    'use_filesize'  => false,
     'use_checksum'  => true,
-    'hash_algo'     => 'xxh128',
-    'fresh_for'     => 300
+    'hash_algo'     => 'xxh128'
 ];
 
 $filecache = new FileCache('testfiles/loremipsum.txt', $options);
