@@ -6,7 +6,8 @@ class FileCache {
     protected Array $options;
     protected String $filename;
     protected Array $attributes;
-    protected Array $additional_headers;
+    protected Array $additional_headers = [];
+    protected Array $headers_added = [];
 
     function __construct(String $filename, Array $options=[]) {
         if(!file_exists($filename)) {
@@ -35,6 +36,7 @@ class FileCache {
             return false;
         }
         $this->additional_headers[] = ['key'=>$key, 'value'=>$value];
+        $this->headers_added[] = strtolower($key);
         return true;
     }
 
@@ -44,6 +46,7 @@ class FileCache {
             exit;
         }
         $this->setHeaders();
+        $this->setMissingHeaders();
         $this->setAdditionalHeaders();
         readfile($this->filename);
         exit;
@@ -65,6 +68,25 @@ class FileCache {
         foreach($this->additional_headers as $header) {
             header($header['key'] . ': ' . $header['value'], false);
         }
+    }
+
+    private function setMissingHeaders() : Void {
+        if(!$this->options['add_missing_headers'])
+            return;
+
+        if(!in_array('content-type', $this->headers_added)) {
+            $mime = $this->getMimeType();
+            if(!empty($mime)) {
+                $this->addHeader('Content-Type', $mime);
+            }
+        }
+    }
+
+    private function getMimeType() : String|bool {
+        if(function_exists('mime_content_type')) {
+            return mime_content_type($this->filename);
+        }
+        return false;
     }
 
     private function isModified() : Bool {
@@ -135,6 +157,10 @@ class FileCache {
             'fresh_for' => [
                 'type' => 'int',
                 'default' => 0,
+            ],
+            'add_missing_headers' => [
+                'type' => 'bool',
+                'default' => true,
             ],
         ];
 
