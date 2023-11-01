@@ -9,7 +9,18 @@ composer require volkerschulz/file-cache
 ```
 
 ## Usage
-Basic example with custom header:
+Minimal:
+```php
+use volkerschulz\FileCache;
+
+// Create instance 
+$filecache = new FileCache('testfiles/cache.png');
+
+// Respond to request
+$filecache->respond();
+```
+\
+With custom header:
 ```php
 use volkerschulz\FileCache;
 
@@ -65,7 +76,11 @@ $filecache->respond();
 *Default: true* - Whether to use an ETag at all. It is strongly recommended to leave that option set to *true*.\
 \
 **fresh_for** *int* \
-*Default: 0* - Number of seconds (from now) the resource is guaranteed not to be stale and should not be revalidated.
+*Default: 0* - Number of seconds (from now) the resource is guaranteed not to be stale and should not be revalidated.\
+\
+**add_missing_headers** *bool* \
+*Default: true* - If set to true, missing headers (currently `Content-Type` only) will be added automatically, if possible.
+
 
 ## Security
 
