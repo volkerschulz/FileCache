@@ -81,6 +81,7 @@ $filecache->respond();
 **add_missing_headers** *bool* \
 *Default: true* - If set to true, missing headers (currently `Content-Type` only) will be added automatically, if possible.
 
+
 ## Security
 
 If you discover a security vulnerability within this package, please send an email to security@volkerschulz.de. All security vulnerabilities will be promptly addressed. Please do not disclose security-related issues publicly until a fix has been announced. 
